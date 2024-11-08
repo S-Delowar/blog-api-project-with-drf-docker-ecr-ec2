@@ -12,12 +12,6 @@ class CustomUSerAdmin(UserAdmin):
     list_display = [
         "email", "username", "is_superuser", "is_staff",
     ]
-    # Customizing add_fieldsets to avoid the 'usable_password' issue
-    add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "username", "password1", "password2"),
-        }),
-    )
     
-admin.site.register(CustomUser)
+    
+admin.site.register(CustomUser, CustomUSerAdmin)
