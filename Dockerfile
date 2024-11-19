@@ -15,3 +15,10 @@ RUN pip install -r requirements.txt
 
 # Copy object
 COPY . .
+
+
+# Collect static files (for production)
+RUN python manage.py collectstatic --noinput
+
+# Expose Gunicorn port (not needed in Nginx as Nginx will handle this)
+EXPOSE 8000

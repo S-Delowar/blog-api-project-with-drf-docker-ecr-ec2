@@ -1,6 +1,7 @@
 
 from pathlib import Path
 
+import os
 import django
 import django.core
 import django.core.mail
@@ -16,7 +17,7 @@ SECRET_KEY = 'django-insecure-_2%p#3qe^2nqt^f(xq_8wc84t+_x0ba)h9kt5$)bdqpq+v6z%o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", 'nginx']
 
 
 # Application definition
@@ -27,6 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # staticfiles
+    "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
     # local
     'accounts',
@@ -52,7 +55,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # allauth
     "allauth.account.middleware.AccountMiddleware",
+    # static
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'blog_api_project.urls'
@@ -125,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [STATIC_DIR,]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
