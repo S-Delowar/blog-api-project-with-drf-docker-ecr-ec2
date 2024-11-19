@@ -8,37 +8,37 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework import viewsets
 
 
-# class PostList(generics.ListCreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
+class PostList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthorOrReadOnly, )
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
-# class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-#     permission_classes = (IsAuthorOrReadOnly, )
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-    
-
-# class UserList(generics.ListCreateAPIView):
-#     permission_classes = [IsAdminUser,]
-#     queryset = get_user_model().objects.all()
-#     serializer_class = UserSerializer
-
-# class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-#     permission_classes = [IsAdminUser,]
-#     queryset = get_user_model().objects.all()
-#     serializer_class = UserSerializer
-
-
-class PostViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthorOrReadOnly,)
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthorOrReadOnly, )
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     
-    
-class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminUser,]
+
+class UserList(generics.ListCreateAPIView):
+    # permission_classes = [IsAdminUser,]
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    # permission_classes = [IsAdminUser,]
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
+
+
+# class PostViewSet(viewsets.ModelViewSet):
+#     permission_classes = (IsAuthorOrReadOnly,)
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+    
+    
+# class UserViewSet(viewsets.ModelViewSet):
+#     permission_classes = [IsAdminUser,]
+#     queryset = get_user_model().objects.all()
+#     serializer_class = UserSerializer
 
 
