@@ -2,23 +2,21 @@
 FROM python:3.11-slim-bullseye
 
 # Set environemnt variables
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHON UNBUFFERED 1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set work directory
 WORKDIR /code
 
-# Install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y gcc libpq-dev
 
-# Copy object
+# Install project dependencies
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy object files
 COPY . .
 
-
-# Collect static files (for production)
-RUN python manage.py collectstatic --noinput
-
-# Expose Gunicorn port (not needed in Nginx as Nginx will handle this)
-EXPOSE 8000
+CMD ["gunicorn", "blog_api_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

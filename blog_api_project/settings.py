@@ -11,17 +11,21 @@ import django.core.mail.backends.console
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_2%p#3qe^2nqt^f(xq_8wc84t+_x0ba)h9kt5$)bdqpq+v6z%o'
+# environment variables -
+import environ
+env = environ.Env()
+ENVIRONMENT = env('DJANGO_EVN', default='development')
+if ENVIRONMENT == 'production':
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env.prod'))
+else:
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env.dev'))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", 'nginx']
-
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+DEBUG = env('DJANGO_DEBUG', default=False)
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', default="localhost").split(',')
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", 'nginx']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -86,13 +90,7 @@ WSGI_APPLICATION = 'blog_api_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432
-    }
+    'default': env.db(),
 }
 
 
@@ -179,3 +177,22 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'A sample blog to learn about DRF',
     'VERSION': '1.0.0',
 }
+
+
+
+# Deployment Checklist
+SECURE_SSL_REDIRECT=env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
+SECURE_HSTS_SECONDS=env.int('DJANGO_SECURE_HSTS_SECONDS', default=2592000)
+SECURE_HSTS_INCLUDE_SUBDOMAINS=env.bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
+SECURE_HSTS_PRELOAD=env.bool('DJANGO_SECURE_HSTS_PRELOAD', default=True)
+SESSION_COOKIE_SECURE=env.bool('DJANGO_SESSION_COOKIE_SECURE', default=True)
+CSRF_COOKIE_SECURE=env.bool('DJANGO_CSRF_COOKIE_SECURE', default=True)
+
+
+print(SECURE_SSL_REDIRECT)
+print(SECURE_HSTS_SECONDS)
+print(SECURE_HSTS_INCLUDE_SUBDOMAINS)
+print(SECURE_HSTS_PRELOAD)
+print(SESSION_COOKIE_SECURE)
+print(CSRF_COOKIE_SECURE)
+print("allowed hosts: ", ALLOWED_HOSTS)

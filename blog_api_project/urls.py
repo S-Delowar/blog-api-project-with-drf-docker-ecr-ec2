@@ -8,7 +8,7 @@ from drf_spectacular.views import (
 )
 
 def home(request):
-    return HttpResponse("Welcome to my site!")
+    return HttpResponse("Welcome to the Blog API Project!")
 
 
 urlpatterns = [
